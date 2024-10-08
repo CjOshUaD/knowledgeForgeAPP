@@ -1,101 +1,189 @@
+"use client";
+
+import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import React from "react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarMenuToggle,
+  NavbarMenuItem,
+  NavbarMenu,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+} from "@nextui-org/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 
-export default function Home() {
+export default function Page() {
+  initialScale: 1;
+  width: "device-width";
+  maximumScale: 1;
+  vieportFit: "cover";
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="flex-12 flex-col item-center justify-center md:h-screen md:w-screen antilaised h-auto ">
+      {/*Navigation Bar */}
+      <header>
+        <div>
+          <Navbar className="sm:flex justify-between bg-[#1A4870]">
+            <NavbarBrand>
+              <Image
+                src={"/KnowledgeForge.png"}
+                alt="KnowledgeForge "
+                width={400}
+                height={90}
+                className="self-center"
+              />
+            </NavbarBrand>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <NavbarContent
+              className="sm:flex gap-4 space-x-14 text-3xl"
+              justify="center"
+            >
+              <NavbarItem isActive>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="#"
+                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                #FFC55A"
+                >
+                  <strong>Home</strong>
+                </Button>
+              </NavbarItem>
+              <NavbarItem isActive>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="#"
+                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                #FFC55A"
+                >
+                  <strong>About</strong>
+                </Button>
+              </NavbarItem>
+              <NavbarItem isActive>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="#"
+                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                #FFC55A"
+                >
+                  <strong>Course</strong>
+                </Button>
+              </NavbarItem>
+              <NavbarItem isActive>
+                <Button
+                  as={Link}
+                  color="primary"
+                  href="#"
+                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                #FFC55A"
+                >
+                  <strong>Contacts</strong>
+                </Button>
+              </NavbarItem>
+            </NavbarContent>
+
+            <NavbarContent justify="end">
+              {/*SEARCH BAR */}
+              <NavbarItem className="relative flex rounded-lg items-center focus-within: text-gray-200">
+                <MagnifyingGlassIcon className="absolute h-5 w-5 ml-3 text-black-50 pointer-events-none" />
+                <input
+                  className="flex w-full pr-3 pl-10 py-2 font-semibold placeholder-black-500 text-black rounded-2xl border-none ring-2 ring-gray-300 focus-ring-500 focus:ring-2"
+                  type="search"
+                  name="search"
+                  placeholder="Search Courses"
+                  autoComplete="off"
+                  aria-label="Search Courses"
+                />
+              </NavbarItem>
+
+              <NavbarItem className=" flex ">
+                {/*LOGIN BUTTON */}
+                <Button
+                  as={Link}
+                  href="/login"
+                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                    #FFC55A"
+                >
+                  <strong>Login</strong>
+                </Button>
+              </NavbarItem>
+            </NavbarContent>
+          </Navbar>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    </header>
+      {/* LANDING PAGE*/}
+      <div>
+        {" "}
+        {/*Main DIV */}
+        <div className="wrap grid grid-cols-2 bg-[#1A4870] md:h-screen md:w-screen">
+          <div>
+            <div className="flex-1 fixed md:h-sreen pr-45 bg-[#596fb7] rounded-2xl relative bg-opacity-70">
+              <div className="flex text-5xl justify-center p-6">
+                <h1 className="text-white font-bold">
+                  Forge Your Future <br />
+                  Unlock Your Potential
+                </h1>
+              </div>
+              <div className=" flex justify-start ">
+                <p className="flex text-white  text-center text-2xl p-10">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Purus gravida quis blandit turpis. Augue neque gravida in
+                  fermentum et sollicitudin ac orci. Et sollicitudin ac orci
+                  phasellus egestas. Elementum empus egestas sed sed risus
+                  pretium quam vulputate. Interdum velit euismod in pellentesque
+                  massa placerat duis ultricies.
+                </p>
+              </div>
+
+              {/*SIGN UP BUTTON*/}
+              <div className="flex justify-center mb-10">
+                <Button
+                  as={Link}
+                  href="/signup"
+                  variant="flat"
+                  className="flex transition duration-150 ease-in-out bg-[#FFC55A] mb-5 text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
+                    #FFC55A]"
+                >
+                  <strong>Sign Up</strong>
+                  <ArrowRightCircleIcon className="ml-auto h-6 w-6  " />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="justify-end">
+            <div>
+              {" "}
+              <Image
+                src="/vibrant-books.png"
+                width={600}
+                height={600}
+                alt="bookshelves"
+                className="flex relative fixed object-none object-right  rounded-2xl w-11/12 top-50 left-10  opacity-50 size-3/6"
+              />
+              <Image
+                src="/group-of-peopleSmiling.png"
+                alt="Group of People Smiling"
+                width={1000}
+                height={1000}
+                className="flex relative fixed  inset-x-0 bottom-36  top-50  left-32 size-4/5"
+              />
+            </div>
+        </div>
+          </div>
+      </div>{" "}
+      {/*Main DIV */}
+    </main>
   );
 }
