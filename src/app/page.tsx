@@ -24,12 +24,12 @@ import Image from "next/image";
 export default function Page() {
   initialScale: 1;
   width: "device-width";
+  height: "device-height";
   maximumScale: 1;
   vieportFit: "cover";
   return (
-    <main className="flex-12 flex-col item-center justify-center md:h-screen md:w-screen antilaised h-auto ">
+    <main className="flex-12 flex-col item-center justify-center md:h-screen md:w-screen antilaised">
       {/*Navigation Bar */}
-      <header>
         <div>
           <Navbar className="sm:flex justify-between bg-[#1A4870]">
             <NavbarBrand>
@@ -120,12 +120,12 @@ export default function Page() {
             </NavbarContent>
           </Navbar>
         </div>
-    </header>
+
       {/* LANDING PAGE*/}
-      <div>
+      <div className="md:h-screen">
         {" "}
         {/*Main DIV */}
-        <div className="wrap grid grid-cols-2 bg-[#1A4870] md:h-screen md:w-screen">
+        <div className=" grid grid-cols-2 bg-[#1A4870] md:h-screen md:w-screen ">
           <div>
             <div className="flex-1 fixed md:h-sreen pr-45 bg-[#596fb7] rounded-2xl relative bg-opacity-70">
               <div className="flex text-5xl justify-center p-6">
@@ -150,7 +150,7 @@ export default function Page() {
               <div className="flex justify-center mb-10">
                 <Button
                   as={Link}
-                  href="/signup"
+                  href="/register"
                   variant="flat"
                   className="flex transition duration-150 ease-in-out bg-[#FFC55A] mb-5 text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
                     #FFC55A]"
