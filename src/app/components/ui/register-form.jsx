@@ -5,6 +5,7 @@ import Link from "next/link";
 import { poppins } from "./fonts";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 export default function RegisterForm() {
   const [pending, setPending] = useState("");
   const [userType, setUserType] = useState("");
@@ -84,14 +85,14 @@ return (
               Register Here
             </h1>
             <p className="text-lg my-9">
-              Please Enter the nessecary details to begin your Journey!
+              Please Enter the necessary details to begin your Journey!
             </p>
           </div>
           <div>
-            <h2 className="font-bold">Kindly Select Your Instution</h2>
+            <h2 className="font-bold">Kindly Select Your Institution</h2>
             <br />
             <select name="userType" id="userType" onChange={(e) => setUserType(e.target.value) }>
-              <option>-----Instution-----</option>
+              <option>-----Institution-----</option>
               <option value="student" >Student</option>
               <option value="teacher">Teacher</option>
             </select>
@@ -144,6 +145,8 @@ return (
             >
               {pending?"Registering" : "Register"}
               </button>
+
+              <button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>Sign with google </button>
             
             
           </div>

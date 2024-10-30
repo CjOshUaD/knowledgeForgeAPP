@@ -2,124 +2,25 @@
 
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarMenuToggle,
-  NavbarMenuItem,
-  NavbarMenu,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-} from "@nextui-org/react";
+
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
+import { connectMongoDB } from "./lib/mongodb";
+import Navbar from "./components/NavBar";
+import { Button, Link } from "@nextui-org/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Page() {
   initialScale: 1;
   width: "device-width";
   height: "device-height";
   maximumScale: 1;
-  vieportFit: "cover";
+  viewportFit: "cover";
+
+  const db = connectMongoDB();
   return (
-    <main className="flex-12 flex-col item-center justify-center md:h-screen md:w-screen antilaised">
-      {/*Navigation Bar */}
-        <div>
-          <Navbar className="sm:flex justify-between bg-[#1A4870]">
-            <NavbarBrand>
-              <Image
-                src={"/KnowledgeForge.png"}
-                alt="KnowledgeForge "
-                width={400}
-                height={90}
-                className="self-center"
-              />
-            </NavbarBrand>
-
-            <NavbarContent
-              className="sm:flex gap-4 space-x-14 text-3xl"
-              justify="center"
-            >
-              <NavbarItem isActive>
-                <Button
-                  as={Link}
-                  color="primary"
-                  href="#"
-                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
-                #FFC55A"
-                >
-                  <strong>Home</strong>
-                </Button>
-              </NavbarItem>
-              <NavbarItem isActive>
-                <Button
-                  as={Link}
-                  color="primary"
-                  href="#"
-                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
-                #FFC55A"
-                >
-                  <strong>About</strong>
-                </Button>
-              </NavbarItem>
-              <NavbarItem isActive>
-                <Button
-                  as={Link}
-                  color="primary"
-                  href="#"
-                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
-                #FFC55A"
-                >
-                  <strong>Course</strong>
-                </Button>
-              </NavbarItem>
-              <NavbarItem isActive>
-                <Button
-                  as={Link}
-                  color="primary"
-                  href="#"
-                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
-                #FFC55A"
-                >
-                  <strong>Contacts</strong>
-                </Button>
-              </NavbarItem>
-            </NavbarContent>
-
-            <NavbarContent justify="end">
-              {/*SEARCH BAR */}
-              <NavbarItem className="relative flex rounded-lg items-center focus-within: text-gray-200">
-                <MagnifyingGlassIcon className="absolute h-5 w-5 ml-3 text-black-50 pointer-events-none" />
-                <input
-                  className="flex w-full pr-3 pl-10 py-2 font-semibold placeholder-black-500 text-black rounded-2xl border-none ring-2 ring-gray-300 focus-ring-500 focus:ring-2"
-                  type="search"
-                  name="search"
-                  placeholder="Search Courses"
-                  autoComplete="off"
-                  aria-label="Search Courses"
-                />
-              </NavbarItem>
-
-              <NavbarItem className=" flex ">
-                {/*LOGIN BUTTON */}
-                <Button
-                  as={Link}
-                  href="/login"
-                  className="bg-[#FFC55A]  text-white text-base hover:-translate-y-1 hover:scale-110 hover:bg[
-                    #FFC55A"
-                >
-                  <strong>Login</strong>
-                </Button>
-              </NavbarItem>
-            </NavbarContent>
-          </Navbar>
-        </div>
+    <main className="flex-12 flex-col item-center justify-center md:h-screen md:w-screen antialiased">
+      <Navbar/>
 
       {/* LANDING PAGE*/}
       <div className="md:h-screen">
@@ -127,7 +28,7 @@ export default function Page() {
         {/*Main DIV */}
         <div className=" grid grid-cols-2 bg-[#1A4870] md:h-screen md:w-screen ">
           <div>
-            <div className="flex-1 fixed md:h-sreen pr-45 bg-[#596fb7] rounded-2xl relative bg-opacity-70">
+            <div className="flex-1 fixed md:h-screen pr-45 bg-[#596fb7] rounded-2xl relative bg-opacity-70">
               <div className="flex text-5xl justify-center p-6">
                 <h1 className="text-white font-bold">
                   Forge Your Future <br />

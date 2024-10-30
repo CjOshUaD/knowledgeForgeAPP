@@ -8,12 +8,12 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, "Mmust be a valid email address"],
+      required: [true, "Must be a valid email address"],
       unique: [true, "Please enter a valid email address"],
     },
     password: {
       type: String,
-      required: [true, "Mmust porivide password"],
+      required: [true, "Must provide password"],
       unique: [true, "Please enter a valid email address"],
     },
     userType: {
