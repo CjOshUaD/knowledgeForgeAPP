@@ -2,11 +2,13 @@
 
 import Navbar from "../components/NavBar";
 
-export default function Teacher(){
-    <div>
-        <h1>
-            Hello Teacher!
-        </h1>
-    </div>
-
+export default function Teacher() {
+    return (  // Add return statement here
+        <div>
+            <Navbar />  {/* If you want to include the Navbar */}
+            <h1>
+                Hello Teacher!
+            </h1>
+        </div>
+    );
 }

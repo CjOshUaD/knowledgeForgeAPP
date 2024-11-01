@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "json-server knowledgeForge.users.json --port 5000"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.7.2",
@@ -31,6 +32,7 @@
     "framer-motion": "^11.7.0",
     "gapi-script": "^1.2.0",
     "google-auth-library": "^9.14.2",
+    "json-server": "^1.0.0-beta.3",
     "jsonwebtoken": "^9.0.2",
     "lint": "^1.1.2",
     "lucide-react": "^0.453.0",

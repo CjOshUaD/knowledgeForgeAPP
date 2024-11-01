@@ -5,31 +5,15 @@ import Table from "@/app/components/table";
 //import { useRouter } from "next/navigation";
 import axios from "axios";
 
-export default async function Admin() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/api/users");
-
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
+export default function Admin() {
+ 
   return (
     <div>
       <h1>Hello Admin</h1>
       <h2>Manage Students</h2>
       <SideNav />
-      {/* <Table users={users} /> */}
-      <div>
-        {/* <form onSubmit={handleSubmit}> */}
+      <Table/>
+      {/* <div>
         <form>
           <label htmlFor="userType">User Type</label>
           <select
@@ -75,18 +59,18 @@ export default async function Admin() {
 
           <button
             className="bg-[#FFC55A] text-white text-base hover:bg-[#FFC55A] mt-3 mb-3 rounded-md w-20 h-10"
-            // disabled={pending}
+            disabled={pending}
           >
-            {/* {pending ? "Registering..." : "Register"} */}
+            {pending ? "Registering..." : "Register"}
             Register
           </button>
-          {/* {error && (
+          {error && (
           <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
             {error}
           </div>
-        )} */}
+        )}
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }

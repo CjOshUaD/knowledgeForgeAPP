@@ -12,7 +12,7 @@ export default async function handler(req, res){
         await user.save();
         res.status(201).json(user);
     } else{
-        res.status(201).json(user);
+        res.status(201).json(User);
         res.status(405).end(`Method ${req.method} Not Allowed` );
     }
 }
