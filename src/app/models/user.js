@@ -1,32 +1,34 @@
-import mongoose, { Schema, models } from "mongoose";
+import mongoose from 'mongoose';
 
-const userSchema = new Schema(
-  {
-    // id: {
-    //   type: String,
-    // },
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: [true, "Must be a valid email address"],
-      unique: [true, "Please enter a valid email address"],
-    },
-    password: {
-      type: String,
-      required: [true, "Must provide password"],
-      unique: [true, "Please enter a valid email address"],
-    },
-    userType: {
-      type: String,
-      required: true,
-      enum: ["student", "teacher"],
-    },
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Name is required"],
+    trim: true,
   },
-  { timestamps: true }
-);
+  email: {
+    type: String,
+    required: [true, "Email is required"],
+    unique: true,
+    trim: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: function() {
+      return this.provider === 'credentials'; // Only require password for credentials provider
+    },
+    minlength: [6, "Password must be at least 6 characters"],
+  },
+  role: {
+    type: String,
+    enum: ['student', 'teacher'],
+    required: [true, "Role is required"],
+    default: 'student'
+  }
+}, {
+  timestamps: true
+});
 
-const User = models.User || mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;
