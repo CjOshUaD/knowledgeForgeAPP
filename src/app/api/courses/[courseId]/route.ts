@@ -57,99 +57,49 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions);
-    
-    if (!session) {
+    if (!session?.user?.id) {
       return NextResponse.json(
-        { error: "Not authenticated" },
+        { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
-    const formData = await request.formData();
-    
-    // Add validation for required fields
-    const title = formData.get('title');
-    const description = formData.get('description');
-    
-    if (!title || !description) {
-      return NextResponse.json(
-        { error: "Title and description are required" },
-        { status: 400 }
-      );
-    }
-
-    // Safely parse JSON data with error handling
-    let lessons = [];
-    try {
-      const lessonsStr = formData.get('lessons');
-      if (lessonsStr) {
-        lessons = JSON.parse(lessonsStr as string);
-      }
-    } catch (e) {
-      console.error('Error parsing lessons:', e);
-      return NextResponse.json(
-        { error: "Invalid lessons data format" },
-        { status: 400 }
-      );
-    }
-
-    // Handle files
-    const files = formData.getAll('files');
-    const fileData = files.map((file: any) => {
-      if (!file || !file.name) {
-        throw new Error('Invalid file data');
-      }
-      return {
-        name: file.name,
-        path: `/uploads/${file.name}`,
-        type: file.type
-      };
-    });
+    const { courseId } = params;
+    const body = await request.json();
 
     await connectMongoDB();
 
-    // Find the course and verify ownership
-    const existingCourse = await Course.findById(params.courseId);
-    
-    if (!existingCourse) {
+    const course = await Course.findById(courseId);
+    if (!course) {
       return NextResponse.json(
-        { error: "Course not found" },
+        { error: 'Course not found' },
         { status: 404 }
       );
     }
 
-    if (existingCourse.teacherId !== session.user.id) {
+    if (course.teacherId !== session.user.id) {
       return NextResponse.json(
-        { error: "Not authorized to update this course" },
+        { error: 'Not authorized' },
         { status: 403 }
       );
     }
 
-    // Update the course
     const updatedCourse = await Course.findByIdAndUpdate(
-      params.courseId,
+      courseId,
       {
-        title,
-        description,
-        lessons,
-        files: fileData,
-        enrollmentKey: formData.get('enrollmentKey') || '',
+        title: body.title,
+        description: body.description,
+        enrollmentKey: body.enrollmentKey,
+        updatedAt: new Date()
       },
       { new: true }
     );
 
-    return NextResponse.json({
-      message: "Course updated successfully",
-      course: updatedCourse
-    });
-
-  } catch (error: any) {
+    return NextResponse.json(updatedCourse);
+  } catch (error) {
     console.error('Error updating course:', error);
     return NextResponse.json(
-      { 
-        error: "Failed to update course",
-        details: error.message 
-      },
+      { error: 'Failed to update course' },
       { status: 500 }
     );
   }

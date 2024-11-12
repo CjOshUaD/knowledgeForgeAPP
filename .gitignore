@@ -38,3 +38,7 @@ next-env.d.ts
 # file uploads
 public/uploads/*
 !public/uploads/.gitkeep
+
+# ...other entries ...
+public/uploads/*
+!public/uploads/gitkeep

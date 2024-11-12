@@ -1,55 +1,57 @@
 import mongoose from 'mongoose';
 
-const CourseSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: [true, 'Title is required'],
-  },
-  description: {
-    type: String,
-    required: [true, 'Description is required'],
-  },
-  teacherId: {
-    type: String,
-    required: [true, 'Teacher ID is required'],
-  },
-  enrolledStudents: {
-    type: [String],
-    default: [],
-  },
+const FileSchema = new mongoose.Schema({
+  name: String,
+  url: String,
+  type: String
+});
+
+const ChapterSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  files: [{
+    name: String,
+    url: String,
+    type: String
+  }],
   lessons: [{
     title: String,
     content: String,
-    order: Number,
+    file: FileSchema
   }],
-  files: [{
-    name: String,
-    path: String,
-    type: String,
+  assignments: [{
+    title: String,
+    content: String,
+    startDateTime: String,
+    endDateTime: String,
+    file: FileSchema
   }],
-  enrollmentKey: String,
-}, {
-  timestamps: true,
+  quizzes: [{
+    title: String,
+    description: String,
+    questions: [{
+      question: String,
+      type: String,
+      options: [String],
+      correctAnswer: mongoose.Schema.Types.Mixed,
+      points: Number
+    }],
+    startDateTime: String,
+    endDateTime: String,
+    duration: Number,
+    totalPoints: Number,
+    file: FileSchema
+  }]
 });
 
-export interface ICourse {
-  _id: string;
-  title: string;
-  description: string;
-  teacherId: string;
-  enrolledStudents: string[];
-  lessons: Array<{
-    title: string;
-    content: string;
-    order: number;
-  }>;
-  files: Array<{
-    name: string;
-    path: string;
-    type: string;
-  }>;
-  enrollmentKey?: string;
-}
+const CourseSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  teacherId: { type: String, required: true },
+  enrollmentKey: String,
+  chapters: [ChapterSchema],
+  files: [FileSchema],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
 
-const Course = mongoose.models.Course || mongoose.model('Course', CourseSchema);
-export default Course; 
+export default mongoose.models.Course || mongoose.model('Course', CourseSchema); 

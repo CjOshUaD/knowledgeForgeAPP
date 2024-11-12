@@ -1,20 +1,60 @@
 "use client";
 
-import { useState } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import LessonManager from './LessonManager';
+
+interface FileData {
+  name: string;
+  url: string;
+  type: string;
+}
+
+interface Lesson {
+  title: string;
+  content: string;
+  file?: FileData;
+}
+
+interface Assignment {
+  title: string;
+  content: string;
+  startDateTime: string;
+  endDateTime: string;
+  file?: FileData;
+}
+
+interface Quiz {
+  title: string;
+  description: string;
+  questions: Array<{
+    question: string;
+    type: string;
+    options?: string[];
+    correctAnswer?: string | boolean;
+    points: number;
+  }>;
+  startDateTime: string;
+  endDateTime: string;
+  duration: number;
+  totalPoints: number;
+  file?: FileData;
+}
+
+interface Chapter {
+  title: string;
+  lessons: Lesson[];
+  assignments: Assignment[];
+  quizzes: Quiz[];
+}
 
 interface Course {
   _id: string;
   title: string;
   description: string;
-  lessons: Array<{
-    title: string;
-    content: string;
-    order: number;
-  }>;
-  files: any[];
+  teacherId: string;
+  chapters: Chapter[];
+  files?: FileData[];
+  enrolledStudents?: string[];
+  enrollmentKey?: string;
 }
 
 interface TeacherCourseCardProps {
@@ -25,120 +65,106 @@ interface TeacherCourseCardProps {
 
 export default function TeacherCourseCard({ course, onDelete, onUpdate }: TeacherCourseCardProps) {
   const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [error, setError] = useState('');
-  const [showLessonManager, setShowLessonManager] = useState(false);
-
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      setError('');
-      
-      await axios.delete(`/api/courses/${course._id}`);
-      onDelete();
-      setShowDeleteConfirm(false);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to delete course');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleEdit = () => {
-    router.push(`/teacher/courses/${course._id}/edit`);
+    router.push(`/courses/${course._id}/edit`);
   };
 
-  const handleView = () => {
-    router.push(`/courses/${course._id}`);
+  // Function to calculate total files
+  function calculateTotalFiles(course: Course): number {
+    let total = 0;
+    
+    // Count course-level files
+    if (Array.isArray(course.files)) {
+      const validCourseFiles = course.files.filter(file => 
+        file.name && file.url && !file.name.includes('client_secret')
+      );
+      total += validCourseFiles.length;
+    }
+
+    // Count files in chapters
+    course.chapters?.forEach(chapter => {
+      // Add lesson files
+      chapter.lessons?.forEach(lesson => {
+        if (lesson.file && !lesson.file.name.includes('client_secret')) {
+          total += 1;
+        }
+      });
+
+      // Add assignment files
+      chapter.assignments?.forEach(assignment => {
+        if (assignment.file && !assignment.file.name.includes('client_secret')) {
+          total += 1;
+        }
+      });
+
+      // Add quiz files
+      chapter.quizzes?.forEach(quiz => {
+        if (quiz.file && !quiz.file.name.includes('client_secret')) {
+          total += 1;
+        }
+      });
+    });
+
+    return total;
+  }
+
+  // Calculate stats for the course
+  const stats = {
+    totalChapters: course.chapters?.length || 0,
+    totalLessons: course.chapters?.reduce((total, chapter) => 
+      total + (chapter.lessons?.length || 0), 0) || 0,
+    totalAssignments: course.chapters?.reduce((total, chapter) => 
+      total + (chapter.assignments?.length || 0), 0) || 0,
+    totalQuizzes: course.chapters?.reduce((total, chapter) => 
+      total + (chapter.quizzes?.length || 0), 0) || 0,
+    totalFiles: calculateTotalFiles(course)
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-      <div className="p-6">
-        <h3 className="text-xl font-semibold mb-2 text-gray-800">{course.title}</h3>
-        <p className="text-gray-600 mb-4 line-clamp-2">{course.description}</p>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <h3 className="text-xl font-semibold mb-2">{course.title}</h3>
+      <p className="text-gray-600 mb-4">{course.description}</p>
 
-        {/* Course Stats */}
-        <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
-          <span>{course.lessons?.length || 0} Lessons</span>
-          <span>•</span>
-          <span>{course.files?.length || 0} Materials</span>
+      {/* Course Statistics */}
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="text-center p-2 bg-blue-50 rounded">
+          <span className="text-xl font-bold text-blue-600">{stats.totalChapters}</span>
+          <p className="text-sm text-blue-600">Chapters</p>
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={handleView}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            View
-          </button>
-          <button
-            onClick={handleEdit}
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => setShowLessonManager(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-          >
-            Manage Lessons
-          </button>
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-          >
-            Delete
-          </button>
+        <div className="text-center p-2 bg-green-50 rounded">
+          <span className="text-xl font-bold text-green-600">{stats.totalLessons}</span>
+          <p className="text-sm text-green-600">Lessons</p>
         </div>
-
-        {error && (
-          <p className="text-red-600 text-sm mt-2">{error}</p>
-        )}
+        <div className="text-center p-2 bg-purple-50 rounded">
+          <span className="text-xl font-bold text-purple-600">{stats.totalAssignments}</span>
+          <p className="text-sm text-purple-600">Assignments</p>
+        </div>
+        <div className="text-center p-2 bg-yellow-50 rounded">
+          <span className="text-xl font-bold text-yellow-600">{stats.totalQuizzes}</span>
+          <p className="text-sm text-yellow-600">Quizzes</p>
+        </div>
+        <div className="text-center p-2 bg-red-50 rounded">
+          <span className="text-xl font-bold text-red-600">{stats.totalFiles}</span>
+          <p className="text-sm text-red-600">Files</p>
+        </div>
       </div>
 
-      {/* Lesson Manager Modal */}
-      {showLessonManager && (
-        <LessonManager
-          courseId={course._id}
-          initialLessons={course.lessons || []}
-          onClose={() => setShowLessonManager(false)}
-          onUpdate={() => {
-            onUpdate();
-            setShowLessonManager(false);
-          }}
-        />
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4">Delete Course</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete "{course.title}"? This action cannot be undone.
-            </p>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                disabled={isDeleting}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Action Buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={handleEdit}
+          className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Edit
+        </button>
+        <button
+          onClick={onDelete}
+          className="flex-1 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 } 

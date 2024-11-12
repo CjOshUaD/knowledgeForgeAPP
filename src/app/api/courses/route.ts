@@ -4,7 +4,6 @@ import Course from "@/app/models/Course";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
 
-
 declare module "next-auth" {
   interface Session {
     user: {
@@ -16,6 +15,7 @@ declare module "next-auth" {
     }
   }
 }
+
 export async function GET(request: Request) {
   
  
@@ -76,42 +76,104 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Check authentication
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: "Not authenticated" },
+        { error: 'Not authenticated' }, 
         { status: 401 }
       );
     }
 
-    const data = await request.json();
-    
-    console.log('Creating course with data:', {
-      ...data,
-      teacherId: session.user.id
-    });
-
+    // Connect to MongoDB
     await connectMongoDB();
 
-    const course = await Course.create({
-      ...data,
-      teacherId: session.user.id,
-      enrolledStudents: [],
-      createdAt: new Date()
+    // Parse form data
+    const formData = await request.formData();
+    
+    // Log received data
+    console.log('Received form data:', {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      chaptersJson: formData.get('chapters'),
+      fileCount: formData.get('fileCount')
     });
 
-    console.log('Created course:', course);
+    // Basic validation
+    const title = formData.get('title');
+    const description = formData.get('description');
+    const chaptersJson = formData.get('chapters');
+
+    if (!title || !description || !chaptersJson) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Parse chapters
+    const chapters = JSON.parse(chaptersJson as string);
+
+    // Handle files
+    const fileCount = parseInt(formData.get('fileCount') as string || '0');
+    const files = [];
+    
+    for (let i = 0; i < fileCount; i++) {
+      const file = formData.get(`file-${i}`);
+      const metadataJson = formData.get(`fileMetadata-${i}`);
+      
+      if (file && metadataJson) {
+        const metadata = JSON.parse(metadataJson as string);
+        // For now, store file info without actual upload
+        files.push({
+          name: metadata.name,
+          type: metadata.type,
+          url: '/placeholder-url' // Replace with actual file upload later
+        });
+      }
+    }
+
+    // Create course
+    const courseData = {
+      title,
+      description,
+      enrollmentKey: formData.get('enrollmentKey'),
+      teacherId: session.user.id,
+      chapters,
+      files
+    };
+
+    // Log course data before saving
+    console.log('Creating course with data:', courseData);
+
+    const savedCourse = await Course.create(courseData);
+
+    // Log saved course
+    console.log('Course created successfully:', savedCourse._id);
 
     return NextResponse.json({
-      message: "Course created successfully",
-      course
-    });
+      course: savedCourse,
+      message: 'Course created successfully'
+    }, { status: 201 });
 
   } catch (error: any) {
-    console.error('Error creating course:', error);
+    console.error('Error in course creation:', error);
     return NextResponse.json(
-      { error: "Failed to create course" },
+      { 
+        error: 'Failed to create course',
+        details: error.message 
+      },
       { status: 500 }
     );
   }
+}
+
+// Implement your file upload function
+async function uploadFile(file: FormDataEntryValue): Promise<string> {
+  // Implement your file upload logic here
+  // This should upload the file to your storage service and return the URL
+  // Example:
+  // const uploadedFile = await uploadToS3(file);
+  // return uploadedFile.url;
+  throw new Error('File upload not implemented');
 } 

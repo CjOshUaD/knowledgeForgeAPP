@@ -11,8 +11,14 @@ interface Course {
   _id: string;
   title: string;
   description: string;
-  lessons: any[];
-  files: any[];
+  chapters: Array<{
+    title: string;
+    lessons: Array<any>;
+    assignments: Array<any>;
+    quizzes: Array<any>;
+    files: Array<any>;
+  }>;
+  files: Array<any>;
 }
 
 export default function TeacherPage() {
@@ -22,6 +28,8 @@ export default function TeacherPage() {
   const [error, setError] = useState('');
 
   const fetchCourses = async () => {
+    if (!session?.user?.email) return;
+    
     try {
       setLoading(true);
       const response = await axios.get('/api/courses?type=teaching');
@@ -40,23 +48,6 @@ export default function TeacherPage() {
     }
   }, [session]);
 
-  const handleCourseDelete = () => {
-    fetchCourses(); // Refresh the course list after deletion
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <div className="container mx-auto p-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -72,21 +63,37 @@ export default function TeacherPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map(course => (
-            <TeacherCourseCard
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {courses.map(course => (
+                <TeacherCourseCard
                   key={course._id}
                   course={course}
-                  onDelete={handleCourseDelete} onUpdate={function (): void {
-                      throw new Error('Function not implemented.');
-                  } }            />
-          ))}
-        </div>
+                  onDelete={async () => {
+                    try {
+                      await axios.delete(`/api/courses/${course._id}`);
+                      fetchCourses();
+                    } catch (err) {
+                      console.error('Failed to delete course:', err);
+                      setError('Failed to delete course');
+                    }
+                  }}
+                  onUpdate={fetchCourses}
+                />
+              ))}
+            </div>
 
-        {courses.length === 0 && !loading && (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-600">You haven't created any courses yet.</p>
-            <p className="text-gray-500 mt-2">Click the "Create Course" button to get started!</p>
+            {!loading && courses.length === 0 && (
+              <div className="text-center py-12 bg-white rounded-lg shadow">
+                <p className="text-gray-600">You haven't created any courses yet.</p>
+                <p className="text-gray-500 mt-2">Click the "Create Course" button to get started!</p>
+              </div>
+            )}
           </div>
         )}
       </div>

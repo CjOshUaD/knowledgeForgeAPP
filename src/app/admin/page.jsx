@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SideNav from "@/app/components/adminSidebar";
+// import SideNav from "@/app/components/adminSidebar";
 import Table from "@/app/components/table";
 //import { useRouter } from "next/navigation";
 import axios from "axios";
