@@ -1,0 +1,79 @@
+{
+  "users": [
+    {
+      "_id": {
+        "$oid": "6724171c7d556111816e4f65"
+      },
+      "name": "jhanyne",
+      "email": "jhanyne@gmail.com",
+      "password": "123456",
+      "userType": "student",
+      "createdAt": {
+        "$date": "2024-10-31T23:47:40.207Z"
+      },
+      "updatedAt": {
+        "$date": "2024-10-31T23:47:40.207Z"
+      },
+      "__v": 0,
+      "id": "a45c"
+    },
+    {
+      "_id": {
+        "$oid": "672417d87d556111816e4f68"
+      },
+      "name": "christian",
+      "email": "christian@gmail.com",
+      "password": "123456",
+      "userType": "student",
+      "createdAt": {
+        "$date": "2024-10-31T23:50:48.552Z"
+      },
+      "updatedAt": {
+        "$date": "2024-10-31T23:50:48.552Z"
+      },
+      "__v": 0,
+      "id": "d1a1"
+    },
+    {
+      "_id": {
+        "$oid": "672417f77d556111816e4f6b"
+      },
+      "name": "des",
+      "email": "des@gmail.com",
+      "password": "123456",
+      "userType": "student",
+      "createdAt": {
+        "$date": "2024-10-31T23:51:19.057Z"
+      },
+      "updatedAt": {
+        "$date": "2024-10-31T23:51:19.057Z"
+      },
+      "__v": 0,
+      "id": "97d6"
+    },
+    {
+      "id": "8d37",
+      "name": "john",
+      "email": "john@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "ce6a",
+      "name": "john",
+      "email": "john@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "dc59",
+      "name": "john",
+      "email": "john@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "a5aa",
+      "name": "john",
+      "email": "john@gmail.com",
+      "password": "123456"
+    }
+  ]
+}
